@@ -31,9 +31,9 @@ pip install -r requirements.txt
 
 ### 1. Data Setup
 
-The system uses real 10-year historical wind and solar generation data. Data files should be placed in the `data/` directory:
-- `data/wind_generation_10_years` - Wind generation time series
-- `data/solar_generation_10_years` - Solar generation time series
+The system uses simulated 11-year historical wind and solar generation data. Data files should be placed in the `data/` directory:
+- `data/wind_generation_11_years_simulated` - Wind generation time series
+- `data/solar_generation_11_years_simulated` - Solar generation time series
 
 Alternatively, generate synthetic data for testing:
 
