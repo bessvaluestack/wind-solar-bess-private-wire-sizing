@@ -1,7 +1,7 @@
 # Wind + Solar + BESS + Private Wire Digital Twin
 
 Digital twin model for sizing battery energy storage systems (BESS) and private wire transmission capacity for renewable energy (wind + solar) serving hyperscale datacenters.
-[Site diagram](img/site_viz.png)
+![Site diagram](img/site_viz.png)
 
 ## Overview
 
