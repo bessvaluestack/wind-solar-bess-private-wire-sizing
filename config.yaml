@@ -1,0 +1,70 @@
+# Configuration for Wind + Solar + BESS + Private Wire Digital Twin
+
+# Time series data paths
+generation_data:
+  wind_file: "data/wind_generation_11_years"  # TMY-style 15-min wind generation (MW)
+  solar_file: "data/solar_generation_11_years"  # TMY-style 15-min solar generation (MW)
+
+# Datacenter load parameters
+datacenter:
+  load_file: "data/63_MW_datacenter_load_11_years.csv"  # Path to primary load CSV file (set to null to generate profile)
+  annual_peak_mw: 63.0  # Peak load in MW
+  capacity_factor: 0.85  # Annual capacity factor
+  base_load_ratio: 0.7  # Ratio of base load to peak (0.7 = 70% base, 30% variable)
+  random_seed: 42  # For reproducible load generation
+
+# BESS parameters
+bess:
+  energy_capacity_mwh: 200.0  # Battery energy capacity (MWh)
+  power_capacity_mw: 50.0  # Battery power capacity (MW)
+  min_soc: 0.05  # Minimum state of charge (10%)
+  max_soc: 0.95  # Maximum state of charge (90%)
+  initial_soc: 0.5  # Initial state of charge (50%)
+  charge_efficiency: 0.95  # One-way charging efficiency
+  discharge_efficiency: 0.96  # One-way discharging efficiency
+  max_daily_cycles: 1.5  # Maximum equivalent full cycles per day
+  degradation_per_cycle: 0.0001  # Capacity degradation per full cycle (0.01%)
+
+# Private wire parameters
+private_wire:
+  capacity_mw: 80.0  # Transmission line capacity (MW)
+
+# Auxiliary load parameters
+auxiliary_load:
+  # Mode: 'static', 'generated', or 'csv'
+  mode: 'generated'  # 'static' for constant load, 'generated' for profile generation, 'csv' to load from file
+
+  # Static mode parameters (used when mode='static')
+  aux_load_kw: 500.0  # Fixed auxiliary load in kW (e.g., for grid connection, cooling, control systems)
+
+  # CSV mode parameters (used when mode='csv')
+  aux_load_csv: null  # Path to CSV file with aux load profile (timestamp, total_aux_mw or total_aux_kw)
+
+  # Generated mode parameters (used when mode='generated')
+  generator:
+    num_wind_turbines: 21
+    wind_turbine_capacity_mw: 8.0
+    solar_capacity_mw: null  # Auto-inferred from generation data if null
+    inverter_standby_kw_per_mw: 0.5  # Inverter standby power per MW solar capacity (nighttime)
+    inverter_operating_kw_per_mw: 0.2  # Inverter operating parasitic per MW solar capacity
+    fixed_aux_load_kw: 100.0  # Fixed equipment (cameras, sensors, monitoring, control)
+    wind_turbine_base_aux_kw: 5.0  # Base aux per turbine (control, sensors, heating)
+    wind_turbine_aux_per_mw: 0.3  # Additional aux per MW generation (operating losses)
+    wind_low_generation_threshold_mw: 0.5  # Threshold per turbine for active nacelle control
+    wind_nacelle_active_probability: 0.05  # Fraction of low-wind timesteps with active control
+    random_seed: 42  # For reproducible aux load generation
+
+# Economic parameters
+economics:
+  ppa_price_eur_per_mwh: 50.0  # PPA price (EUR/MWh)
+  wind_capex_eur: 200000000.0  # Total wind farm capital cost (EUR)
+  solar_capex_eur: 180000000.0  # Total solar farm capital cost (EUR)
+  bess_capex_eur_per_mwh: 190000.0  # BESS capital cost (EUR/MWh)
+  wire_capex_eur_per_mw: 110000.0  # EHV transmission line capital cost (EUR/MW)
+  project_lifetime_years: 10  # Project lifetime for NPV calculations
+  discount_rate: 0.06  # Discount rate for NPV
+
+# Simulation parameters
+simulation:
+  years: 10  # Number of years to simulate
+  timestep_minutes: 15  # Timestep in minutes

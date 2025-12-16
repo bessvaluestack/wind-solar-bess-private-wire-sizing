@@ -1,0 +1,65 @@
+# Sizing Optimization Configuration
+# Parameters for BESS and private wire capacity optimization
+
+# Optimization method: 'differential_evolution', 'nelder-mead', or 'grid'
+method: differential_evolution
+
+# Parameter bounds for optimization
+bounds:
+  bess_energy_mwh:
+    min: 1
+    max: 1000
+  bess_power_mw:
+    min: 1
+    max: 200
+  wire_capacity_mw:
+    min: 40
+    max: 200
+
+# Constraints (set to null or omit to disable a constraint)
+constraints:
+  max_curtailment_rate: null  # Maximum allowable curtailment (10% of generation). Set to null to disable.
+  max_grid_import_rate: null  # Maximum allowable grid import (20% of load). Set to null to disable.
+
+# Optimization algorithm settings
+algorithm_settings:
+  differential_evolution:
+    maxiter: 50          # Maximum number of generations
+    popsize: 10          # Population size multiplier (total pop = popsize * dimensions)
+    seed: 42             # Random seed for reproducibility
+    workers: 1           # Number of parallel workers (1 to see progress)
+    updating: deferred   # Update strategy: 'immediate' or 'deferred'
+    polish: true         # Use L-BFGS-B to polish the best result
+
+  nelder_mead:
+    maxiter: 100         # Maximum number of iterations
+
+  grid_search:
+    # Grid search ranges (values to test)
+    bess_energy_values: [100, 200, 300]
+    bess_power_values: [40, 60, 80]
+    wire_capacity_values: [200, 205, 210, 215, 220, 240, 260, 280] #[60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280]
+
+# Constraint violation penalties
+penalties:
+  curtailment_violation: 1.0e9   # Penalty multiplier for curtailment violations
+  grid_import_violation: 1.0e9   # Penalty multiplier for grid import violations
+  simulation_failure: 1.0e12     # Cost returned for failed simulations
+
+# Display settings
+display:
+  print_header_separator: "======================================================================"
+  show_progress: true
+  show_intermediate_results: true
+
+# Wire-only optimization (no BESS)
+# Configuration for optimize_wire_size_no_bess.py
+wire_optimization:
+  # Optimization method: 'bounded' (recommended for 1D) or 'differential_evolution'
+  method: bounded
+
+  # Curtailment penalty (EUR/MWh) - represents opportunity cost of lost energy sales
+  # If not specified, defaults to PPA price from config.yaml
+  curtailment_penalty_eur_per_mwh: 50.0  # Same as PPA price by default
+
+  # Note: Wire capacity bounds are taken from the main 'bounds' section above
