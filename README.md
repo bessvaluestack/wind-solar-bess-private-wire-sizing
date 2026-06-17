@@ -35,12 +35,6 @@ The system uses simulated 11-year historical wind and solar generation data. Dat
 - `data/wind_generation_11_years_simulated` - Wind generation time series
 - `data/solar_generation_11_years_simulated` - Solar generation time series
 
-Alternatively, generate synthetic data for testing:
-
-```bash
-python generate_example_data.py --years 10 --wind-capacity 150 --solar-capacity 100
-```
-
 ### 2. Configure System
 
 Edit `config.yaml` to set your system parameters:
@@ -275,7 +269,7 @@ timestamp,wind_mw
 ...
 ```
 
-You can provide your own data for solar, wind and load or use a synthetic data generator.
+You can provide your own data for solar or wind as long as you stick to the provided format:
 
 ### Load Data
 
@@ -532,7 +526,6 @@ Edit `optimize_sizing.py` to optimize for:
 - LCOE (Levelized Cost of Energy)
 - IRR (Internal Rate of Return)
 - Capacity factor maximization
-- Other custom metrics
 
 ## Technical Details
 
