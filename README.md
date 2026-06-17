@@ -275,7 +275,7 @@ timestamp,wind_mw
 ...
 ```
 
-You can provide your own TMY (Typical Meteorological Year) data or use the synthetic data generator.
+You can provide your own data for solar, wind and load or use a synthetic data generator.
 
 ### Load Data
 
@@ -386,14 +386,12 @@ The battery dispatch uses convex optimization (CVXPY) to:
 - SoC limits (min/max)
 - Power limits (charge/discharge)
 - Energy balance (physical battery dynamics)
-- Wire capacity limits
+- Private Wire capacity limits
 - Daily cycling limits (e.g., max 1.5 full cycles per day)
 
 **Strategy:**
 - Charge when generation exceeds wire capacity + load
 - Discharge when generation is below load (up to wire capacity)
-- Respect all physical and operational constraints
-- Account for round-trip efficiency and degradation
 
 ## Sizing Optimization
 
