@@ -47,7 +47,7 @@ Edit `config.yaml` to set your system parameters:
 
 ### 3. Run Simulation
 
-Run a single simulation with current configuration:
+Run a single simulation with default configuration:
 
 ```bash
 python run_simulation.py --save
@@ -67,15 +67,13 @@ Instead of generating a new load profile, you can provide an existing CSV file:
 python run_simulation.py --load-csv data/my_load_profile.csv --save
 ```
 
-**Saving a generated load profile for reuse:**
-
-To save the generated load profile for later use:
+**Saving a generated load profile:**
 
 ```bash
 python run_simulation.py --save --save-load-profile
 ```
 
-This saves the load profile to `outputs/load_profile.csv`, which can be reused in future simulations.
+This saves the load profile to `outputs/load_profile_ddmmyy_avg_x_mw.csv`, which can be reused in future simulations.
 
 **Running first year only (faster for testing/debugging):**
 
@@ -89,19 +87,7 @@ python run_simulation.py --first-year-only --save
 python run_simulation.py --first-year-only --bess-energy 250 --wire-capacity 80 --save
 ```
 
-Or in Python code:
-
-```python
-from src.simulator import SystemSimulator
-
-simulator = SystemSimulator("config.yaml")
-results = simulator.run_simulation(
-    load_csv_path="data/63_MW_datacenter_load.csv",
-    first_year_only=True  # Only simulate first year
-)
-```
-
-This is particularly useful when iterating on configurations or during optimization, as it can be 5-10x faster than running the full multi-year simulation.
+This is particularly useful when iterating on configurations or during optimization, as it can be much faster than running the full multi-year simulation.
 
 **Running without BESS (for baseline comparisons):**
 
@@ -175,7 +161,7 @@ python optimize_sizing.py --max-curtailment 0.05 --max-grid-import 0.15
 # Run optimization on first year only (much faster)
 python optimize_sizing.py --method differential_evolution --first-year-only
 
-# Assume all energy can be sold (sets load to wire capacity)
+# Assume all energy can be sold via PW (sets load to wire capacity)
 python optimize_sizing.py --method differential_evolution --assume-all-sellable
 
 # Combine flags for fastest optimization with maximum revenue assumption
@@ -518,7 +504,7 @@ Replace the synthetic data with your own TMY data:
 Edit `src/bess_dispatch.py` to customize:
 - Objective function weights
 - Additional constraints
-- Different optimization solvers
+- Pick optimization solvers and their parameters (ECOS_BB is default)
 
 ### Custom Optimization Objectives
 
@@ -536,7 +522,7 @@ Uses **CVXPY** with ECOS solver for convex optimization. Key advantages:
 - Fast and reliable
 - Handles large-scale problems (35,000+ timesteps)
 
-### Performance
+### Performance (local)
 
 - Single simulation (~10 years, 15-min): ~5-15 seconds
 - Single simulation (first year only): ~1-3 seconds
@@ -547,8 +533,8 @@ Uses **CVXPY** with ECOS solver for convex optimization. Key advantages:
 ### Limitations
 
 - Assumes perfect forecast (not a real-time dispatch model)
-- Simplified degradation model (throughput-based only)
-- No BESS power electronics losses beyond round-trip efficiency
+- Simplified battery degradation model (throughput-based)
+- No BESS power electronics or other losses modeled separately - assuming it's all rolled into round-trip efficiency
 - No grid connection costs or tariffs (private wire only)
 
 ## License
